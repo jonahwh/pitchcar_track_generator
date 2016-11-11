@@ -52,23 +52,5 @@ module Pitchcar
         from
       end
     end
-
-    def rotate_around(axis)
-      case axis
-      when 'x'
-        self.x = -x
-        direction == DIRECTIONS[:EAST] if direction == DIRECTIONS[:WEST]
-        direction == DIRECTIONS[:WEST] if direction == DIRECTIONS[:EAST]
-      when 'y'
-        self.y = -y
-        direction == DIRECTIONS[:NORTH] if direction == DIRECTIONS[:SOUTH]
-        direction == DIRECTIONS[:SOUTH] if direction == DIRECTIONS[:NORTH]
-      end
-      self
-    end
-
-    def ==(other)
-      direction == other.direction && type == other.type && x == other.x && y == other.y
-    end
   end
 end
