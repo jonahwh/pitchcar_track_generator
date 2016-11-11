@@ -5,7 +5,8 @@ require 'pry'
 module Pitchcar
   class Finder
     @had_rotation = @no_ending = @overlaps = @total_tracks = 0
-    def self.find_tracks(straight, left_right, track_pieces, tracks = [])
+    def self.find_tracks(straight, left_right, track_pieces = 'S', tracks = [])
+      straight -= 1
       print "#{tracks.size} tracks found. #{@had_rotation} rotations rejected. #{@no_ending} tracks ended incorrectly. #{@overlaps} tracks overlap. Total Tracks: #{@total_tracks}\r"
 
       track = Track.build_from(track_pieces)
@@ -46,7 +47,7 @@ module Pitchcar
     def self.random_track(straight, left_right)
       left = Random.rand(1..left_right)
       right = left_right - left
-      Track.build_from("#{'S' * straight}#{'L' * left}#{'R' * right}".split('').shuffle.join)
+      Track.build_from("S#{'S' * (straight - 1)}#{'L' * left}#{'R' * right}".split('').shuffle.join)
     end
   end
 end
