@@ -42,9 +42,6 @@ module Pitchcar
         return true unless BoyerMoore.search("#{other_track.to_s}#{other_track.to_s}", to_s).nil?
       end
       false
-      # tracks.find do |other_track|
-      #   "#{to_s}#{to_s}".include? other_track.to_s
-      # end != nil
     end
 
     def ends_correctly?
