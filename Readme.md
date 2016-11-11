@@ -13,8 +13,8 @@ Generates all possible tracks, or a single random valid track, for
 ### Generate all possible tracks
 ```ruby
 require_relative 'finder.rb'
-# tracks = Pitchcar::Finder.find_tracks(STRAIGHT_PIECES, LEFT_RIGHT_PIECES)
-tracks = Pitchcar::Finder.find_tracks(6, 10)
+# tracks = Pitchcar::Finder.find_all_tracks(STRAIGHT_PIECES, LEFT_RIGHT_PIECES)
+tracks = Pitchcar::Finder.find_all_tracks(6, 10)
 tracks.first.to_s # => 'SSSSLSLSLRRLLRLL'
 ```
 
