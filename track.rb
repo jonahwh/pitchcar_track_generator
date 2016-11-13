@@ -39,7 +39,8 @@ module Pitchcar
 
     def rotation_exists?(tracks)
       tracks.each do |other_track|
-        return true unless BoyerMoore.search("#{other_track.to_s}#{other_track.to_s}", to_s).nil?
+        other_track = other_track.to_s.gsub(' ', '') * 2
+        return true unless BoyerMoore.search(other_track, to_s.gsub(' ', '')).nil?
       end
       false
     end
@@ -49,7 +50,7 @@ module Pitchcar
     end
 
     def to_s
-      pieces.map { |piece| Piece::TYPES.key(piece.type).to_s[0] }.join
+      pieces.map(&:to_s).join(' ')
     end
 
     def overlaps?

@@ -52,5 +52,9 @@ module Pitchcar
         from
       end
     end
+
+    def to_s
+      TYPES.key(type).to_s.split('_').map { |word| word[0] }.join.downcase.capitalize
+    end
   end
 end
