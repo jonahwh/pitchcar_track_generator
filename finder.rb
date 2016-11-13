@@ -7,7 +7,10 @@ module Pitchcar
 
     class << self
       def find_all_tracks(straight, left_right)
-        find_tracks(straight - 1, left_right, 'S', [])
+        tracks = find_tracks(straight - 1, left_right, 'S', [])
+        tracks.map do |track|
+          track.with_wall_combinations
+        end.flatten
       end
 
       def random_valid_track(straight, left_right)
@@ -15,7 +18,7 @@ module Pitchcar
         until !track.nil? && track.ends_correctly? && !track.overlaps? do
           track = random_track(straight, left_right)
         end
-        track
+        "Slw#{track.to_s[1..-1].gsub('S') { |_| %w(Slw Srw).sample }}"
       end
 
       private

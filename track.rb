@@ -56,5 +56,14 @@ module Pitchcar
     def overlaps?
       pieces.group_by { |piece| [piece.x, piece.y] }.values.any? { |set| set.size > 1 }
     end
+
+    def with_wall_combinations(string = to_s[1..-1].gsub('S', 'T'), combinations = [])
+      if string.include? 'T'
+        with_wall_combinations(string.sub('T', 'Slw'), combinations)
+        with_wall_combinations(string.sub('T', 'Srw'), combinations)
+      else
+        combinations << "Slw#{string}"
+      end
+    end
   end
 end
