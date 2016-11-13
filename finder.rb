@@ -18,7 +18,7 @@ module Pitchcar
         until !track.nil? && track.ends_correctly? && !track.overlaps? do
           track = random_track(straight, left_right)
         end
-        "Slw#{track.to_s[1..-1].gsub('S') { |_| %w(Slw Srw).sample }}"
+        track.to_s_with_walls
       end
 
       private

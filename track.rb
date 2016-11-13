@@ -65,5 +65,9 @@ module Pitchcar
         combinations << "Slw#{string}"
       end
     end
+
+    def to_s_with_walls
+      "Slw#{to_s[1..-1].gsub('S') { |_| %w(Slw Srw).sample }}"
+    end
   end
 end
