@@ -11,7 +11,7 @@ module Pitchcar
     end
 
     def self.build_from(track_pieces)
-      pieces = [Piece.starting_piece]
+      pieces = PieceList.new([Piece.starting_piece])
 
       track_pieces[1..-1].chars.each do |piece_str|
         piece = Piece.new
@@ -42,6 +42,7 @@ module Pitchcar
     end
 
     def to_s
+      pieces[0].type = Piece::TYPES[:STRAIGHT_LEFT_WALL]
       pieces.map(&:to_s).join(' ')
     end
 
@@ -49,17 +50,19 @@ module Pitchcar
       @overlaps ||= pieces.group_by { |piece| [piece.x, piece.y] }.values.any? { |set| set.size > 1 }
     end
 
-    def with_wall_combinations(string = to_s[1..-1].gsub('S', 'T'), combinations = [])
-      if string.include? 'T'
-        with_wall_combinations(string.sub('T', 'Slw'), combinations)
-        with_wall_combinations(string.sub('T', 'Srw'), combinations)
+    def with_wall_combinations(pieces = PieceList.new(self.pieces)[1..-1], combinations = [])
+      straight_index = pieces.find_index { |piece| piece.type == Piece::TYPES[:STRAIGHT] }
+      if straight_index
+        combos = []
+        [Piece::TYPES[:STRAIGHT_LEFT_WALL], Piece::TYPES[:STRAIGHT_RIGHT_WALL]].each do |piece_type|
+          pieces_copy = PieceList.new(pieces)
+          pieces_copy[straight_index].type = piece_type
+          combos = with_wall_combinations(pieces_copy, combinations)
+        end
+        combos
       else
-        combinations << "Slw#{string}"
+        combinations << Track.new([self.pieces.first] + pieces)
       end
-    end
-
-    def to_s_with_walls
-      "Slw#{to_s[1..-1].gsub('S') { |_| %w(Slw Srw).sample }}"
     end
 
     private
@@ -74,6 +77,19 @@ module Pitchcar
 
     def ends_correctly?
       pieces.last.x == pieces.first.x && pieces.last.y == pieces.first.y + 1 && pieces.last.direction == Piece::DIRECTIONS[:SOUTH]
+    end
+  end
+
+  class PieceList < Array
+    def initialize(pieces)
+      pieces.each do |piece|
+        new_piece = Piece.new
+        new_piece.x = piece.x
+        new_piece.y = piece.y
+        new_piece.type = piece.type
+        new_piece.direction = piece.direction
+        self.<< new_piece
+      end
     end
   end
 end

@@ -30,4 +30,4 @@ are provided in `pitchcar_tracks`
 require_relative 'finder.rb'
 # track = Pitchcar::Finder.random_valid_track(STRAIGHT_PIECES, LEFT_RIGHT_PIECES)
 track = Pitchcar::Finder.random_valid_track(6, 10)
-track # => 'Slw Slw L Slw R R Slw Slw R L R R L Slw R R'
+track.to_s # => 'Slw Slw L Slw R R Slw Slw R L R R L Slw R R'

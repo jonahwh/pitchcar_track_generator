@@ -1,6 +1,5 @@
 require_relative 'piece'
 require_relative 'track'
-require 'pry'
 
 module Pitchcar
   class Finder
@@ -8,15 +7,14 @@ module Pitchcar
     class << self
       def find_all_tracks(straight, left_right)
         tracks = find_tracks(straight - 1, left_right, 'S', [])
-        tracks.map do |track|
-          track.with_wall_combinations
-        end.flatten
+        tracks.map(&:with_wall_combinations).flatten
       end
 
       def random_valid_track(straight, left_right)
         track = nil
         track = random_track(straight, left_right) until !track.nil? && track.valid?
-        track.to_s_with_walls
+
+        track.with_wall_combinations.sample
       end
 
       private

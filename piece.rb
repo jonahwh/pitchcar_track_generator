@@ -1,6 +1,6 @@
 module Pitchcar
   class Piece
-    TYPES = { STRAIGHT: 0, LEFT: 1, RIGHT: 2 }
+    TYPES = { STRAIGHT: 0, LEFT: 1, RIGHT: 2, STRAIGHT_LEFT_WALL: 3, STRAIGHT_RIGHT_WALL: 4 }
     DIRECTIONS = { NORTH: 0, EAST: 1, WEST: 2, SOUTH: 3 }
     attr_accessor :direction, :x, :y, :type
 
