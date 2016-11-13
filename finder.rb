@@ -15,9 +15,7 @@ module Pitchcar
 
       def random_valid_track(straight, left_right)
         track = nil
-        until !track.nil? && track.ends_correctly? && !track.overlaps? do
-          track = random_track(straight, left_right)
-        end
+        track = random_track(straight, left_right) until !track.nil? && track.valid?
         track.to_s_with_walls
       end
 
@@ -28,7 +26,7 @@ module Pitchcar
         track = Track.build_from(track_pieces)
         return false if track.overlaps?
 
-        return tracks << track if straight == 0 && left_right == 0 && track.ends_correctly? && !track.rotation_exists?(tracks)
+        return tracks << track if straight == 0 && left_right == 0 && track.valid?(tracks)
         [track_pieces].product((['S'] * straight + ['L'] * left_right + ['R'] * left_right).uniq).each do |result|
           if result[1] == 'S'
             find_tracks(straight - 1, left_right, result.join, tracks)

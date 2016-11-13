@@ -37,16 +37,8 @@ module Pitchcar
       Track.new(pieces)
     end
 
-    def rotation_exists?(tracks)
-      tracks.each do |other_track|
-        other_track = other_track.to_s.gsub(' ', '') * 2
-        return true unless BoyerMoore.search(other_track, to_s.gsub(' ', '')).nil?
-      end
-      false
-    end
-
-    def ends_correctly?
-      pieces.last.x == pieces.first.x && pieces.last.y == pieces.first.y + 1 && pieces.last.direction == Piece::DIRECTIONS[:SOUTH]
+    def valid?(tracks=[])
+      ends_correctly? && !overlaps? && !rotation_exists?(tracks)
     end
 
     def to_s
@@ -54,7 +46,7 @@ module Pitchcar
     end
 
     def overlaps?
-      pieces.group_by { |piece| [piece.x, piece.y] }.values.any? { |set| set.size > 1 }
+      @overlaps ||= pieces.group_by { |piece| [piece.x, piece.y] }.values.any? { |set| set.size > 1 }
     end
 
     def with_wall_combinations(string = to_s[1..-1].gsub('S', 'T'), combinations = [])
@@ -68,6 +60,20 @@ module Pitchcar
 
     def to_s_with_walls
       "Slw#{to_s[1..-1].gsub('S') { |_| %w(Slw Srw).sample }}"
+    end
+
+    private
+
+    def rotation_exists?(tracks)
+      tracks.each do |other_track|
+        other_track = other_track.to_s.gsub(' ', '') * 2
+        return true unless BoyerMoore.search(other_track, to_s.gsub(' ', '')).nil?
+      end
+      false
+    end
+
+    def ends_correctly?
+      pieces.last.x == pieces.first.x && pieces.last.y == pieces.first.y + 1 && pieces.last.direction == Piece::DIRECTIONS[:SOUTH]
     end
   end
 end
