@@ -1,3 +1,5 @@
+require 'json'
+
 module Pitchcar
   class Piece
     TYPES = { STRAIGHT: 0, LEFT: 1, RIGHT: 2, STRAIGHT_LEFT_WALL: 3, STRAIGHT_RIGHT_WALL: 4 }
@@ -55,6 +57,10 @@ module Pitchcar
 
     def to_s
       TYPES.key(type).to_s.split('_').map { |word| word[0] }.join.downcase.capitalize
+    end
+
+    def to_h
+      { x: x, y: y, type: TYPES.key(type).downcase, direction: DIRECTIONS.key(direction).downcase }
     end
   end
 end

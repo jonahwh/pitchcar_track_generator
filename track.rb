@@ -46,6 +46,10 @@ module Pitchcar
       pieces.map(&:to_s).join(' ')
     end
 
+    def to_json
+      pieces.map(&:to_h).to_json
+    end
+
     def overlaps?
       @overlaps ||= pieces.group_by { |piece| [piece.x, piece.y] }.values.any? { |set| set.size > 1 }
     end
