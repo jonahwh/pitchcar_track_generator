@@ -13,8 +13,13 @@ module Pitchcar
       def random_valid_track(straight, left_right)
         track = nil
         track = random_track(straight, left_right) until !track.nil? && track.valid?
-
         track.with_wall_combinations.sample
+      end
+
+      def random_valid_tracks(straight, left_right, count = 2)
+        tracks = []
+        count.times { tracks << random_valid_track(straight, left_right) }
+        tracks
       end
 
       private
