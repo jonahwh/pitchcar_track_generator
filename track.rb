@@ -42,7 +42,7 @@ module Pitchcar
     end
 
     def to_s
-      pieces[0].type = Piece::TYPES[:STRAIGHT_LEFT_WALL]
+      pieces[0].type = Piece::TYPES[:STRAIGHT_RIGHT_WALL]
       pieces.map(&:to_s).join(' ')
     end
 
