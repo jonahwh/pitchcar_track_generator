@@ -2,7 +2,7 @@ require_relative 'piece'
 require_relative 'track'
 
 module Pitchcar
-  class Finder
+  class Pitchcar
 
     class << self
       def find_all_tracks(straight, left_right)
