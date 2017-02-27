@@ -50,6 +50,13 @@ module Pitchcar
       pieces.map(&:to_h).to_json
     end
 
+    def size
+      x_coords = pieces.map(&:x)
+      y_coords = pieces.map(&:y)
+      # We have to add one, because a piece takes up a discrete distance
+      [x_coords.max - x_coords.min + 1, y_coords.max - y_coords.min + 1]
+    end
+
     def overlaps?
       @overlaps ||= pieces.group_by { |piece| [piece.x, piece.y] }.values.any? { |set| set.size > 1 }
     end
