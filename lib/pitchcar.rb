@@ -11,9 +11,22 @@ module Pitchcar
       end
 
       def random_valid_track(straight, left_right, size_restrictions = {})
-        track = nil
-        track = random_track(straight, left_right, size_restrictions) until !track.nil? && track.valid?
-        track.with_wall_combinations.sample
+        found_track = nil
+        semaphore = Mutex.new
+
+        ENV.fetch('MAX_THREADS', 10).times do
+          Thread.new do
+            track = nil
+            while track.nil? || !track.valid?
+              Thread.stop unless found_track.nil?
+              track = random_track(straight, left_right, size_restrictions)
+            end
+            semaphore.synchronize { found_track = track if found_track.nil? }
+          end
+        end
+
+        sleep(0.01) while found_track.nil?
+        found_track.with_wall_combinations.sample
       end
 
       def random_valid_tracks(straight, left_right, count = 2, size_restrictions = {})
