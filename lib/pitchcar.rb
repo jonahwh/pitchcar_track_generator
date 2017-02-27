@@ -14,7 +14,7 @@ module Pitchcar
         found_track = nil
         semaphore = Mutex.new
 
-        ENV.fetch('MAX_THREADS', 10).times do
+        ENV.fetch('MAX_THREADS', 10).to_i.times do
           Thread.new do
             track = nil
             while track.nil? || !track.valid?
