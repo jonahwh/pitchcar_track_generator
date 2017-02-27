@@ -10,15 +10,15 @@ module Pitchcar
         tracks.map(&:with_wall_combinations).flatten
       end
 
-      def random_valid_track(straight, left_right)
+      def random_valid_track(straight, left_right, size_restrictions = {})
         track = nil
-        track = random_track(straight, left_right) until !track.nil? && track.valid?
+        track = random_track(straight, left_right, size_restrictions) until !track.nil? && track.valid?
         track.with_wall_combinations.sample
       end
 
-      def random_valid_tracks(straight, left_right, count = 2)
+      def random_valid_tracks(straight, left_right, count = 2, size_restrictions = {})
         tracks = []
-        count.times { tracks << random_valid_track(straight, left_right) }
+        count.times { tracks << random_valid_track(straight, left_right, size_restrictions) }
         tracks
       end
 
@@ -40,10 +40,10 @@ module Pitchcar
         tracks
       end
 
-      def random_track(straight, left_right)
+      def random_track(straight, left_right, size_restrictions = {})
         left = Random.rand(1..left_right)
         right = left_right - left
-        Track.build_from("S#{'S' * (straight - 1)}#{'L' * left}#{'R' * right}".split('').shuffle.join)
+        Track.build_from("S#{'S' * (straight - 1)}#{'L' * left}#{'R' * right}".split('').shuffle.join, size_restrictions)
       end
     end
   end

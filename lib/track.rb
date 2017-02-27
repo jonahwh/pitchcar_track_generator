@@ -4,13 +4,15 @@ require_relative 'boyermoore'
 
 module Pitchcar
   class Track
-    attr_accessor :pieces
+    attr_accessor :pieces, :max_size, :min_size
 
-    def initialize(pieces)
+    def initialize(pieces, size_restrictions = {})
       self.pieces = pieces
+      self.max_size = size_restrictions.fetch(:max, x: Float::INFINITY, y: Float::INFINITY)
+      self.min_size = size_restrictions.fetch(:min, x: 1, y: 1)
     end
 
-    def self.build_from(track_pieces)
+    def self.build_from(track_pieces, size_restrictions = {})
       pieces = PieceList.new([Piece.starting_piece])
 
       track_pieces[1..-1].chars.each do |piece_str|
@@ -34,11 +36,11 @@ module Pitchcar
         pieces << piece
       end
 
-      Track.new(pieces)
+      Track.new(pieces, size_restrictions)
     end
 
     def valid?(tracks=[])
-      ends_correctly? && !overlaps? && !rotation_exists?(tracks)
+      ends_correctly? && !overlaps? && !rotation_exists?(tracks) && within_size_restrictions?
     end
 
     def to_s
@@ -54,7 +56,7 @@ module Pitchcar
       x_coords = pieces.map(&:x)
       y_coords = pieces.map(&:y)
       # We have to add one, because a piece takes up a discrete distance
-      [x_coords.max - x_coords.min + 1, y_coords.max - y_coords.min + 1]
+      { x: x_coords.max - x_coords.min + 1, y: y_coords.max - y_coords.min + 1 }
     end
 
     def overlaps?
@@ -88,6 +90,10 @@ module Pitchcar
 
     def ends_correctly?
       pieces.last.x == pieces.first.x && pieces.last.y == pieces.first.y + 1 && pieces.last.direction == Piece::DIRECTIONS[:SOUTH]
+    end
+
+    def within_size_restrictions?
+      size[:x].between?(self.min_size[:x], self.max_size[:x]) && size[:y].between?(self.min_size[:y], self.max_size[:y])
     end
   end
 
