@@ -78,6 +78,17 @@ module Pitchcar
       end
     end
 
+    # Returns pieces list sorted from in a top-bottom left-right manner
+    def graph_sorted
+      pieces.sort do |piece, other_piece|
+        if piece.y == other_piece.y
+          piece.x <=> other_piece.x
+        else
+          other_piece.y <=> piece.y
+        end
+      end
+    end
+
     private
 
     def rotation_exists?(tracks)

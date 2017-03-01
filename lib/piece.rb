@@ -1,9 +1,11 @@
 require 'json'
+require 'rmagick'
 
 module Pitchcar
   class Piece
     TYPES = { STRAIGHT: 0, LEFT: 1, RIGHT: 2, STRAIGHT_LEFT_WALL: 3, STRAIGHT_RIGHT_WALL: 4 }
     DIRECTIONS = { NORTH: 0, EAST: 1, WEST: 2, SOUTH: 3 }
+    STRAIGHT_IMAGE, CURVE_IMAGE = Magick::ImageList.new('images/straight_tile.png', 'images/curve_tile.png').to_a
     attr_accessor :direction, :x, :y, :type
 
     def self.starting_piece
@@ -61,6 +63,36 @@ module Pitchcar
 
     def to_h
       { x: x, y: y, type: TYPES.key(type).downcase, direction: DIRECTIONS.key(direction).downcase }
+    end
+
+    def image
+      case type
+      when TYPES[:STRAIGHT], TYPES[:STRAIGHT_LEFT_WALL], TYPES[:STRAIGHT_RIGHT_WALL]
+        return STRAIGHT_IMAGE.rotate(90) if direction == DIRECTIONS[:NORTH] || direction == DIRECTIONS[:SOUTH]
+        return STRAIGHT_IMAGE
+      when TYPES[:LEFT]
+        case direction
+        when DIRECTIONS[:NORTH]
+          CURVE_IMAGE.rotate(270)
+        when DIRECTIONS[:EAST]
+          CURVE_IMAGE
+        when DIRECTIONS[:WEST]
+          CURVE_IMAGE.rotate(180)
+        when DIRECTIONS[:SOUTH]
+          CURVE_IMAGE.rotate(90)
+        end
+      when TYPES[:RIGHT]
+        case direction
+        when DIRECTIONS[:NORTH]
+          CURVE_IMAGE
+        when DIRECTIONS[:EAST]
+          CURVE_IMAGE.rotate(90)
+        when DIRECTIONS[:WEST]
+          CURVE_IMAGE.rotate(270)
+        when DIRECTIONS[:SOUTH]
+          CURVE_IMAGE.rotate(180)
+        end
+      end
     end
   end
 end

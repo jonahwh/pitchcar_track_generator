@@ -1,0 +1,23 @@
+PATH
+  remote: .
+  specs:
+    pitchcar (0.4.1)
+      rmagick
+      token_phrase
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    backports (3.6.8)
+    rmagick (2.16.0)
+    token_phrase (1.0.6)
+      backports
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  pitchcar!
+
+BUNDLED WITH
+   1.12.5
