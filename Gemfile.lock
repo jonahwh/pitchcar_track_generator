@@ -2,16 +2,14 @@ PATH
   remote: .
   specs:
     pitchcar (0.4.1)
+      bazaar
       rmagick
-      token_phrase
 
 GEM
   remote: https://rubygems.org/
   specs:
-    backports (3.6.8)
+    bazaar (0.0.2)
     rmagick (2.16.0)
-    token_phrase (1.0.6)
-      backports
 
 PLATFORMS
   ruby

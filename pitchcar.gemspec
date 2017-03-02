@@ -10,6 +10,6 @@ Gem::Specification.new do |spec|
   spec.files       = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
   spec.license     = 'MIT'
 
-  spec.add_runtime_dependency 'token_phrase'
+  spec.add_runtime_dependency 'bazaar'
   spec.add_runtime_dependency 'rmagick'
 end

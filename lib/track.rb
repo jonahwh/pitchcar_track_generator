@@ -1,5 +1,7 @@
 require 'csv'
+require 'bazaar'
 require_relative 'piece'
+require_relative 'track_image'
 require_relative 'boyermoore'
 
 module Pitchcar
@@ -52,6 +54,11 @@ module Pitchcar
       pieces.map(&:to_h).to_json
     end
 
+    def to_png
+      TrackImage.new(self).render
+      puts "Track image saved to #{Dir.pwd}/track.png"
+    end
+
     def size
       x_coords = pieces.map(&:x)
       y_coords = pieces.map(&:y)
@@ -89,6 +96,18 @@ module Pitchcar
       end
     end
 
+    def title
+      results = { nouns: [], adjs: [] }
+      [{ name: :nouns, types: %w(items superitems) }, {name: :adjs, types: %w(adj superadj) }].each do |part|
+        part[:types].each do |type|
+          Random.srand(hash.hex)
+          results[part[:name]] << Bazaar.get_item(type).capitalize
+        end
+      end
+      Random.srand(hash.hex)
+      "#{results[:adjs].sample} #{results[:nouns].sample}"
+    end
+
     private
 
     def rotation_exists?(tracks)
@@ -105,6 +124,10 @@ module Pitchcar
 
     def within_size_restrictions?
       size[:x].between?(self.min_size[:x], self.max_size[:x]) && size[:y].between?(self.min_size[:y], self.max_size[:y])
+    end
+
+    def hash
+      Digest::SHA256.hexdigest(to_s)
     end
   end
 
