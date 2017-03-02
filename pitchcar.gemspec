@@ -1,6 +1,6 @@
 Gem::Specification.new do |spec|
   spec.name        = 'pitchcar'
-  spec.version     = '0.5.0'
+  spec.version     = '0.5.1'
   spec.date        = '2017-02-23'
   spec.summary     = 'Pitchcar Track Generator'
   spec.description = 'Generates tracks for pitchcar'
