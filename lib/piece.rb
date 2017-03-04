@@ -66,11 +66,26 @@ module Pitchcar
       { x: x, y: y, type: TYPES.key(type).downcase, direction: DIRECTIONS.key(direction).downcase }
     end
 
+    # Slw N = Srw S
+    # Slw E = Srw W
+    # Slw W == Srw E
+    # Slw S = Srw N
+
     def image
-      case type
-      when TYPES[:STRAIGHT], TYPES[:STRAIGHT_LEFT_WALL], TYPES[:STRAIGHT_RIGHT_WALL]
-        return STRAIGHT_IMAGE.rotate(90) if direction == DIRECTIONS[:NORTH] || direction == DIRECTIONS[:SOUTH]
+      if (type == TYPES[:STRAIGHT_LEFT_WALL] && direction == DIRECTIONS[:NORTH]) || (type == TYPES[:STRAIGHT_RIGHT_WALL] && direction == DIRECTIONS[:SOUTH])
+        return STRAIGHT_IMAGE.rotate(90)
+      elsif (type == TYPES[:STRAIGHT_LEFT_WALL] && direction == DIRECTIONS[:EAST]) || (type == TYPES[:STRAIGHT_RIGHT_WALL] && direction == DIRECTIONS[:WEST])
+        return STRAIGHT_IMAGE.rotate(180)
+      elsif (type == TYPES[:STRAIGHT_LEFT_WALL] && direction == DIRECTIONS[:WEST]) || (type == TYPES[:STRAIGHT_RIGHT_WALL] && direction == DIRECTIONS[:EAST])
         return STRAIGHT_IMAGE
+      elsif (type == TYPES[:STRAIGHT_LEFT_WALL] && direction == DIRECTIONS[:SOUTH]) || (type == TYPES[:STRAIGHT_RIGHT_WALL] && direction == DIRECTIONS[:NORTH])
+        return STRAIGHT_IMAGE.rotate(270)
+      end
+
+      case type
+      when TYPES[:STRAIGHT]
+        return STRAIGHT_IMAGE.rotate(90) if direction == DIRECTIONS[:NORTH] || direction == DIRECTIONS[:SOUTH]
+        STRAIGHT_IMAGE
       when TYPES[:LEFT]
         case direction
         when DIRECTIONS[:NORTH]
