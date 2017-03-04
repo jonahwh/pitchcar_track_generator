@@ -80,7 +80,7 @@ module Pitchcar
         end
         combos
       else
-        track = Track.new([self.pieces.first] + pieces)
+        track = Track.new([self.pieces.first.dup] + pieces.dup)
         track.pieces.first.type = Piece::TYPES[:STRAIGHT_RIGHT_WALL]
         random_right_wall = track.pieces.each_index.select do |index|
           track.pieces[index].type == Piece::TYPES[:STRAIGHT_RIGHT_WALL]
