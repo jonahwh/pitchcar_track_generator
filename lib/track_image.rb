@@ -4,7 +4,7 @@ module Pitchcar
   class TrackImage
     attr_accessor :track
     TILE_SIZE = 570
-    OFFSET_SIZE = -46
+    OFFSET_SIZE = -50
     TITLE_OFFSET = 200
     BLANK_TILE = Magick::Image.new(TILE_SIZE, TILE_SIZE) { |canvas| canvas.background_color = 'white' }
 
