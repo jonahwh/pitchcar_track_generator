@@ -83,7 +83,6 @@ module Pitchcar
         track = Track.new([self.pieces.first] + pieces)
         track.pieces.first.type = Piece::TYPES[:STRAIGHT_RIGHT_WALL]
         random_right_wall = track.pieces.each_index.select do |index|
-          puts track.pieces[index].type
           track.pieces[index].type == Piece::TYPES[:STRAIGHT_RIGHT_WALL]
         end.sample
         track.pieces[random_right_wall].type = Piece::TYPES[:STRAIGHT_START]
