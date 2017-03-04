@@ -3,10 +3,11 @@ require 'rmagick'
 
 module Pitchcar
   class Piece
-    TYPES = { STRAIGHT: 0, LEFT: 1, RIGHT: 2, STRAIGHT_LEFT_WALL: 3, STRAIGHT_RIGHT_WALL: 4 }
+    TYPES = { STRAIGHT: 0, LEFT: 1, RIGHT: 2, STRAIGHT_LEFT_WALL: 3, STRAIGHT_RIGHT_WALL: 4, STRAIGHT_START: 5 }
     DIRECTIONS = { NORTH: 0, EAST: 1, WEST: 2, SOUTH: 3 }
-    STRAIGHT_IMAGE, CURVE_IMAGE = Magick::ImageList.new(File.expand_path('../images/straight_tile.png', __FILE__),
-                                                        File.expand_path('../images/curve_tile.png', __FILE__)).to_a
+    STRAIGHT_IMAGE, CURVE_IMAGE, START_IMAGE = Magick::ImageList.new(File.expand_path('../images/straight_tile.png', __FILE__),
+                                                                     File.expand_path('../images/curve_tile.png', __FILE__),
+                                                                     File.expand_path('../images/start_tile.png', __FILE__)).to_a
     attr_accessor :direction, :x, :y, :type
 
     def self.starting_piece
@@ -86,6 +87,17 @@ module Pitchcar
       when TYPES[:STRAIGHT]
         return STRAIGHT_IMAGE.rotate(90) if direction == DIRECTIONS[:NORTH] || direction == DIRECTIONS[:SOUTH]
         STRAIGHT_IMAGE
+      when TYPES[:STRAIGHT_START]
+        case direction
+        when DIRECTIONS[:NORTH]
+          START_IMAGE.rotate(270)
+        when DIRECTIONS[:EAST]
+          START_IMAGE
+        when DIRECTIONS[:WEST]
+          START_IMAGE.rotate(180)
+        when DIRECTIONS[:SOUTH]
+          START_IMAGE.rotate(90)
+        end
       when TYPES[:LEFT]
         case direction
         when DIRECTIONS[:NORTH]

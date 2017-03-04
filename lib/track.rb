@@ -46,7 +46,6 @@ module Pitchcar
     end
 
     def to_s
-      pieces[0].type = Piece::TYPES[:STRAIGHT_RIGHT_WALL]
       pieces.map(&:to_s).join(' ')
     end
 
@@ -81,8 +80,16 @@ module Pitchcar
         end
         combos
       else
-        combinations << Track.new([self.pieces.first] + pieces)
+        track = Track.new([self.pieces.first] + pieces)
+        track.pieces.first.type = Piece::TYPES[:STRAIGHT_RIGHT_WALL]
+        random_right_wall = track.pieces.each_index.select do |index|
+          puts track.pieces[index].type
+          track.pieces[index].type == Piece::TYPES[:STRAIGHT_RIGHT_WALL]
+        end.sample
+        track.pieces[random_right_wall].type = Piece::TYPES[:STRAIGHT_START]
+        combinations << track
       end
+      return combinations
     end
 
     # Returns pieces list sorted from in a top-bottom left-right manner
