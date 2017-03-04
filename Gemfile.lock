@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    pitchcar (0.6.1)
+    pitchcar (0.6.2)
       bazaar
       rmagick
 
