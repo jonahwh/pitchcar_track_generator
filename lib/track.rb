@@ -66,7 +66,8 @@ module Pitchcar
     end
 
     def overlaps?
-      @overlaps ||= pieces.group_by { |piece| [piece.x, piece.y] }.values.any? { |set| set.size > 1 }
+      string = to_s
+      @overlaps ||= string.include?('LLL') || string.include?('RRR') ||  pieces.group_by { |piece| [piece.x, piece.y] }.values.any? { |set| set.size > 1 }
     end
 
     def with_wall_combinations(pieces = PieceList.new(self.pieces)[1..-1], combinations = [])
