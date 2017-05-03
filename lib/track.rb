@@ -90,10 +90,11 @@ module Pitchcar
     end
 
     def assign_start_piece
+      return self if pieces.any? { |piece| piece.instance_of? Pieces::Start }
       start_index = pieces.each_index.select { |i| pieces[i].is_a? Pieces::StraightRightWall }.sample
       # If there are no straight right pieces, pick any straight piece to be the start
       start_index = pieces.each_index.select { |i| pieces[i].is_a? Pieces::Straight }.sample if start_index.nil?
-      self.pieces[start_index] = Pieces::Start.new(pieces[start_index].to_h) unless start_index.nil?
+      pieces[start_index] = Pieces::Start.new(pieces[start_index].to_h) unless start_index.nil?
       self
     end
 
