@@ -1,4 +1,10 @@
-require_relative 'piece'
+require_relative 'pieces/piece'
+require_relative 'pieces/straight'
+require_relative 'pieces/start'
+require_relative 'pieces/straight_right_wall'
+require_relative 'pieces/straight_left_wall'
+require_relative 'pieces/left'
+require_relative 'pieces/right'
 require_relative 'track'
 
 module Pitchcar
@@ -56,7 +62,7 @@ module Pitchcar
       def random_track(straight, left_right, size_restrictions = {})
         left = Random.rand(1..left_right)
         right = left_right - left
-        Track.build_from("S#{'S' * (straight - 1)}#{'L' * left}#{'R' * right}".split('').shuffle.join, size_restrictions)
+        Track.build_from("#{'S' * straight}#{'L' * left}#{'R' * right}".split('').shuffle.join, size_restrictions)
       end
     end
   end

@@ -1,6 +1,6 @@
 require 'csv'
 require 'bazaar'
-require_relative 'piece'
+require_relative 'pieces/piece'
 require_relative 'track_image'
 require_relative 'boyermoore'
 
@@ -15,30 +15,11 @@ module Pitchcar
     end
 
     def self.build_from(track_pieces, size_restrictions = {})
-      pieces = PieceList.new([Piece.starting_piece])
-
-      track_pieces[1..-1].chars.each do |piece_str|
-        piece = Piece.new
-        piece.x = pieces.last.x
-        piece.y = pieces.last.y
-        piece.type = Piece.type_from_string(piece_str)
-
-        case pieces.last.direction
-        when Piece::DIRECTIONS[:NORTH]
-          piece.y = pieces.last.y + 1
-        when Piece::DIRECTIONS[:EAST]
-          piece.x = pieces.last.x + 1
-        when Piece::DIRECTIONS[:WEST]
-          piece.x = pieces.last.x - 1
-        when Piece::DIRECTIONS[:SOUTH]
-          piece.y = pieces.last.y - 1
-        end
-        piece.direction = piece.next_direction(pieces.last.direction)
-
-        pieces << piece
+      track = Track.new([Pieces::Piece.first_from_string(track_pieces.chars.first)], size_restrictions)
+      track_pieces.chars[1..-1].each do |piece_str|
+        track.pieces << Pieces::Piece.type_from_string(piece_str).new(track.pieces.last.next_coordinate.merge(direction: track.pieces.last.next_direction))
       end
-
-      Track.new(pieces, size_restrictions)
+      track
     end
 
     def valid?(tracks=[])
@@ -126,7 +107,7 @@ module Pitchcar
     end
 
     def ends_correctly?
-      pieces.last.x == pieces.first.x && pieces.last.y == pieces.first.y + 1 && pieces.last.direction == Piece::DIRECTIONS[:SOUTH]
+      pieces.last.next_coordinate == pieces.first.coordinate && pieces.last.next_direction == Pieces::Piece::DIRECTIONS[:SOUTH]
     end
 
     def within_size_restrictions?
