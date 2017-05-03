@@ -7,6 +7,8 @@ require_relative 'pieces/left'
 require_relative 'pieces/right'
 require_relative 'track'
 
+Thread.abort_on_exception = true
+
 module Pitchcar
   class Pitchcar
 

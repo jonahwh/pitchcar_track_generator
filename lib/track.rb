@@ -1,5 +1,6 @@
 require 'csv'
 require 'bazaar'
+require 'digest'
 require_relative 'pieces/piece'
 require_relative 'track_image'
 require_relative 'boyermoore'
@@ -51,26 +52,18 @@ module Pitchcar
       @overlaps ||= string.include?('LLL') || string.include?('RRR') ||  pieces.group_by { |piece| [piece.x, piece.y] }.values.any? { |set| set.size > 1 }
     end
 
-    def with_wall_combinations(pieces = PieceList.new(self.pieces)[1..-1], combinations = [])
-      straight_index = pieces.find_index { |piece| piece.type == Piece::TYPES[:STRAIGHT] }
+    def with_wall_combinations(pieces = self.pieces, tracks = [])
+      straight_index = pieces.find_index { |piece| piece.instance_of? Pieces::Straight }
       if straight_index
-        combos = []
-        [Piece::TYPES[:STRAIGHT_LEFT_WALL], Piece::TYPES[:STRAIGHT_RIGHT_WALL]].each do |piece_type|
-          pieces_copy = PieceList.new(pieces)
-          pieces_copy[straight_index].type = piece_type
-          combos = with_wall_combinations(pieces_copy, combinations)
-        end
-        combos
+        pieces_copy = pieces.dup
+
+        [Pieces::StraightLeftWall, Pieces::StraightRightWall].map do |piece_type|
+          pieces_copy[straight_index] = piece_type.new(pieces[straight_index].to_h)
+          with_wall_combinations(pieces_copy, tracks)
+        end.last
       else
-        track = Track.new([self.pieces.first.dup] + pieces.dup)
-        track.pieces.first.type = Piece::TYPES[:STRAIGHT_RIGHT_WALL]
-        random_right_wall = track.pieces.each_index.select do |index|
-          track.pieces[index].type == Piece::TYPES[:STRAIGHT_RIGHT_WALL]
-        end.sample
-        track.pieces[random_right_wall].type = Piece::TYPES[:STRAIGHT_START]
-        combinations << track
+        tracks << Track.new(pieces.dup).assign_start_piece
       end
-      return combinations
     end
 
     # Returns pieces list sorted from in a top-bottom left-right manner
@@ -96,6 +89,14 @@ module Pitchcar
       "#{results[:adjs].sample} #{results[:nouns].sample}"
     end
 
+    def assign_start_piece
+      start_index = pieces.each_index.select { |i| pieces[i].is_a? Pieces::StraightRightWall }.sample
+      # If there are no straight right pieces, pick any straight piece to be the start
+      start_index = pieces.each_index.select { |i| pieces[i].is_a? Pieces::Straight }.sample if start_index.nil?
+      self.pieces[start_index] = Pieces::Start.new(pieces[start_index].to_h)
+      self
+    end
+
     private
 
     def rotation_exists?(tracks)
@@ -116,19 +117,6 @@ module Pitchcar
 
     def hash
       Digest::SHA256.hexdigest(to_s)
-    end
-  end
-
-  class PieceList < Array
-    def initialize(pieces)
-      pieces.each do |piece|
-        new_piece = Piece.new
-        new_piece.x = piece.x
-        new_piece.y = piece.y
-        new_piece.type = piece.type
-        new_piece.direction = piece.direction
-        self.<< new_piece
-      end
     end
   end
 end
