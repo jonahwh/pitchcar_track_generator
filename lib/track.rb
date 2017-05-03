@@ -93,7 +93,7 @@ module Pitchcar
       start_index = pieces.each_index.select { |i| pieces[i].is_a? Pieces::StraightRightWall }.sample
       # If there are no straight right pieces, pick any straight piece to be the start
       start_index = pieces.each_index.select { |i| pieces[i].is_a? Pieces::Straight }.sample if start_index.nil?
-      self.pieces[start_index] = Pieces::Start.new(pieces[start_index].to_h)
+      self.pieces[start_index] = Pieces::Start.new(pieces[start_index].to_h) unless start_index.nil?
       self
     end
 
@@ -108,6 +108,7 @@ module Pitchcar
     end
 
     def ends_correctly?
+      return false if pieces.length < 2
       pieces.last.next_coordinate == pieces.first.coordinate && pieces.last.next_direction == Pieces::Piece::DIRECTIONS[:SOUTH]
     end
 

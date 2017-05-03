@@ -14,7 +14,7 @@ module Pitchcar
 
     class << self
       def find_all_tracks(straight, left_right)
-        tracks = find_tracks(straight - 1, left_right, 'S', [])
+        tracks = find_tracks(straight, left_right, '', [])
         tracks.map(&:with_wall_combinations).flatten
       end
 
@@ -47,10 +47,12 @@ module Pitchcar
 
       def find_tracks(straight, left_right, track_pieces, tracks)
         print "Found #{tracks.size} tracks\r"
-        track = Track.build_from(track_pieces)
-        return false if track.overlaps?
+        unless track_pieces.empty?
+          track = Track.build_from(track_pieces)
+          return false if track.overlaps?
+          return tracks << track if straight == 0 && left_right == 0 && track.valid?(tracks)
+        end
 
-        return tracks << track if straight == 0 && left_right == 0 && track.valid?(tracks)
         [track_pieces].product((['S'] * straight + ['L'] * left_right + ['R'] * left_right).uniq).each do |result|
           if result[1] == 'S'
             find_tracks(straight - 1, left_right, result.join, tracks)
