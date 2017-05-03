@@ -28,15 +28,15 @@ module Pitchcar
     end
 
     def to_s
-      pieces.map(&:to_s).join(' ')
+      assign_start_piece.pieces.map(&:to_s).join(' ')
     end
 
     def to_json
-      pieces.map(&:to_h).to_json
+      assign_start_piece.pieces.map(&:to_h).to_json
     end
 
     def to_png
-      TrackImage.new(self).render
+      TrackImage.new(assign_start_piece).render
       puts "Track image saved to #{Dir.pwd}/track.png"
     end
 
@@ -62,7 +62,7 @@ module Pitchcar
           with_wall_combinations(pieces_copy, tracks)
         end.last
       else
-        tracks << Track.new(pieces.dup).assign_start_piece
+        tracks << Track.new(pieces.dup)
       end
     end
 
