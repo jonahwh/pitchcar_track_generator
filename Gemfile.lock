@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    pitchcar (0.6.3)
+    pitchcar (0.7.0)
       bazaar
       rmagick
 
@@ -18,4 +18,4 @@ DEPENDENCIES
   pitchcar!
 
 BUNDLED WITH
-   1.12.5
+   1.14.6
