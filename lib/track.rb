@@ -57,7 +57,7 @@ module Pitchcar
       if straight_index
         pieces_copy = pieces.dup
 
-        [Pieces::StraightLeftWall, Pieces::StraightRightWall].map do |piece_type|
+        [Pieces::StraightLeftWall, Pieces::StraightRightWall, Pieces::StraightNoWall].map do |piece_type|
           pieces_copy[straight_index] = piece_type.new(pieces[straight_index].to_h)
           with_wall_combinations(pieces_copy, tracks)
         end.last

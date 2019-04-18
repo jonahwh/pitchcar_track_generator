@@ -19,8 +19,8 @@ module Pitchcar
       end
 
       def image
-        return IMAGE.rotate(90) if north? || south?
-        IMAGE
+        return self.class::IMAGE.rotate(90) if north? || south?
+        self.class::IMAGE
       end
 
       def to_s
